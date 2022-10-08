@@ -1,4 +1,5 @@
 from transformers import BertPreTrainedModel, BertModel
+from transformers.file_utils import add_start_docstrings_to_callable
 from torch.nn import CrossEntropyLoss
 from torch import nn
 
