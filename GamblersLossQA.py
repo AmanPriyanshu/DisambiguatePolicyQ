@@ -132,6 +132,7 @@ class BertForQuestionAnswering(BertPreTrainedModel):
         sequence_output = outputs[0]
 
         logits = self.qa_outputs(sequence_output)
+        print(logits.shape)
         start_logits, end_logits = logits.split(1, dim=-1)
         start_logits = start_logits.squeeze(-1)
         end_logits = end_logits.squeeze(-1)
@@ -153,6 +154,5 @@ class BertForQuestionAnswering(BertPreTrainedModel):
             end_loss = loss_fct(end_logits, end_positions)
             total_loss = (start_loss + end_loss) / 2
             outputs = (total_loss,) + outputs
-        print("Aman's custom QA system!")
 
         return outputs  # (loss), start_logits, end_logits, (hidden_states), (attentions)
