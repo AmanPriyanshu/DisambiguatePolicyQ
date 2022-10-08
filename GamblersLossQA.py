@@ -151,6 +151,7 @@ class BertForQuestionAnswering(BertPreTrainedModel):
         if not return_dict:
             output = (start_logits, end_logits) + outputs[2:]
             return ((total_loss,) + output) if total_loss is not None else output
+        print("AMAN's QA System!!")
 
         return QuestionAnsweringModelOutput(
             loss=total_loss,
