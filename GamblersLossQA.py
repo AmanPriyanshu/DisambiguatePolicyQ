@@ -145,9 +145,10 @@ class BertForQuestionAnswering(BertPreTrainedModel):
         start_logits, end_logits = logits.split(1, dim=-1)
         start_logits = start_logits.squeeze(-1)
         end_logits = end_logits.squeeze(-1)
-        start_logits = self.softmax_layer(start_logits)
-        end_logits = self.softmax_layer(end_logits)
-
+        print(start_logits.shape)
+        temp = start_logits[:, 1:]
+        print(temp.shape)
+        print(start_logits.shape)
         outputs = (start_logits, end_logits,) + outputs[2:]
         if start_positions is not None and end_positions is not None:
             # If we are on multi-GPU, split add a dimension
@@ -161,8 +162,8 @@ class BertForQuestionAnswering(BertPreTrainedModel):
             end_positions.clamp_(0, ignored_index)
 
             loss_fct = gamblers_loss#CrossEntropyLoss(ignore_index=ignored_index)
-            start_loss = loss_fct(start_logits, start_positions)
-            end_loss = loss_fct(end_logits, end_positions)
+            start_loss = loss_fct(self.softmax_layer(start_logits), start_positions)
+            end_loss = loss_fct(self.softmax_layer(end_logits), end_positions)
             total_loss = (start_loss + end_loss) / 2
             outputs = (total_loss,) + outputs
 
