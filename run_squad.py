@@ -28,13 +28,13 @@ import torch
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 from torch.utils.data.distributed import DistributedSampler
 from tqdm import tqdm, trange
+from helper import AutoModelForQuestionAnswering
 
 from transformers import (
     MODEL_FOR_QUESTION_ANSWERING_MAPPING,
     WEIGHTS_NAME,
     AdamW,
     AutoConfig,
-    AutoModelForQuestionAnswering,
     AutoTokenizer,
     get_linear_schedule_with_warmup,
     squad_convert_examples_to_features,
