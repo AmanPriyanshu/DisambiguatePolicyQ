@@ -5,9 +5,7 @@ from torch import nn
 import torch
 
 def gamblers_loss(output, target, lamda=2):
-    print(target)
     target += 1
-    print(target)
     col_0 = output[range(target.shape[0]), [0]*target.shape[0]]
     col_x = output[range(target.shape[0]), target]
     col_x = col_x + col_0/lamda
@@ -147,12 +145,8 @@ class BertForQuestionAnswering(BertPreTrainedModel):
         start_logits, end_logits = logits.split(1, dim=-1)
         start_logits = start_logits.squeeze(-1)
         end_logits = end_logits.squeeze(-1)
-        print(start_logits)
-        print(end_logits)
         start_logits = self.softmax_layer(start_logits)
         end_logits = self.softmax_layer(end_logits)
-        print(start_logits)
-        print(end_logits)
 
         outputs = (start_logits, end_logits,) + outputs[2:]
         if start_positions is not None and end_positions is not None:
