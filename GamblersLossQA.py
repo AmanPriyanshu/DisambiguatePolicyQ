@@ -6,7 +6,7 @@ from torch import nn
 def gamblers_loss(output, target, lamda=2):
     print(output.shape, target.shape)
     col_0 = output[range(target.shape[0]), [0]*target.shape[0]]
-    print(col0.shape)
+    print(col_0.shape)
     col_x = output[range(target.shape[0]), target]
     print(col_x.shape)
     col_x = col_x + col_0/lamda
