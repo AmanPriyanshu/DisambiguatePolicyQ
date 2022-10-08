@@ -141,7 +141,8 @@ class BertForQuestionAnswering(BertPreTrainedModel):
         )
 
         sequence_output = outputs[0]
-        sequence_output = torch.cat((sequence_output, torch.zeros(sequence_output.shape[0], 1, sequence_output.shape[2])), dim=1)
+        padding_zeros = torch.zeros(sequence_output.shape[0], 1, sequence_output.shape[2])
+        sequence_output = torch.cat((sequence_output, padding_zeros.to(sequence_output.device)), dim=1)
         print(sequence_output.shape)
         logits = self.qa_outputs(sequence_output)
         print(logits.shape)
