@@ -130,7 +130,7 @@ class BertForQuestionAnswering(BertPreTrainedModel):
         )
 
         sequence_output = outputs[0]
-
+        print(sequence_output.shape)
         logits = self.qa_outputs(sequence_output)
         print(logits.shape)
         start_logits, end_logits = logits.split(1, dim=-1)
