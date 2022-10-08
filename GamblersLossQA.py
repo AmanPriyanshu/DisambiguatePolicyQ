@@ -3,6 +3,13 @@ from transformers.file_utils import add_start_docstrings_to_callable
 from torch.nn import CrossEntropyLoss
 from torch import nn
 
+def gamblers_loss(output, target, lamda=2):
+    print(output.shape, target.shape)
+    col_0 = output[range(target.shape[0]), [0]*target.shape[0]]
+    col_x = output[range(target.shape[0]), target]
+    col_x = col_x + col_0/lamda
+    return -col_x.log().mean()
+
 BERT_INPUTS_DOCSTRING = r"""
     Args:
         input_ids (:obj:`torch.LongTensor` of shape :obj:`(batch_size, sequence_length)`):
@@ -149,7 +156,7 @@ class BertForQuestionAnswering(BertPreTrainedModel):
             start_positions.clamp_(0, ignored_index)
             end_positions.clamp_(0, ignored_index)
 
-            loss_fct = CrossEntropyLoss(ignore_index=ignored_index)
+            loss_fct = gamblers_loss#CrossEntropyLoss(ignore_index=ignored_index)
             start_loss = loss_fct(start_logits, start_positions)
             end_loss = loss_fct(end_logits, end_positions)
             total_loss = (start_loss + end_loss) / 2
