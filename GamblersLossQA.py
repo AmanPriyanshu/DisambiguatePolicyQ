@@ -4,6 +4,7 @@ from torch.nn import CrossEntropyLoss
 from torch import nn
 
 def gamblers_loss(output, target, lamda=2):
+    target += 1
     print(output.shape, target.shape)
     col_0 = output[range(target.shape[0]), [0]*target.shape[0]]
     print(col_0.shape)
@@ -139,6 +140,7 @@ class BertForQuestionAnswering(BertPreTrainedModel):
         )
 
         sequence_output = outputs[0]
+        sequence_output = torch.cat((sequence_output, torch.zeros(sequence_output.shape[0], 1, sequence_output.shape[2])), dim=1)
         print(sequence_output.shape)
         logits = self.qa_outputs(sequence_output)
         print(logits.shape)
