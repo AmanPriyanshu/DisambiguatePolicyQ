@@ -145,7 +145,7 @@ class BertForQuestionAnswering(BertPreTrainedModel):
         start_logits, end_logits = logits.split(1, dim=-1)
         start_logits = start_logits.squeeze(-1)
         end_logits = end_logits.squeeze(-1)
-        outputs = (start_logits[:, 1:], end_logits[:, 1:],) + outputs[2:]
+        outputs = (start_logits, end_logits,) + outputs[2:]
         if start_positions is not None and end_positions is not None:
             # If we are on multi-GPU, split add a dimension
             if len(start_positions.size()) > 1:
