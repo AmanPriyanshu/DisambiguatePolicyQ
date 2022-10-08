@@ -5,12 +5,11 @@ from torch import nn
 import torch
 
 def gamblers_loss(output, target, lamda=2):
+    print(target)
     target += 1
-    print(output.shape, target.shape)
+    print(target)
     col_0 = output[range(target.shape[0]), [0]*target.shape[0]]
-    print(col_0.shape)
     col_x = output[range(target.shape[0]), target]
-    print(col_x.shape)
     col_x = col_x + col_0/lamda
     return -col_x.log().mean()
 
@@ -66,6 +65,7 @@ class BertForQuestionAnswering(BertPreTrainedModel):
 
         self.bert = BertModel(config)
         self.qa_outputs = nn.Linear(config.hidden_size, config.num_labels)
+        self.softmax_layer = torch.nn.Softmax(dim=1)
 
         self.init_weights()
 
@@ -143,12 +143,16 @@ class BertForQuestionAnswering(BertPreTrainedModel):
         sequence_output = outputs[0]
         padding_zeros = torch.zeros(sequence_output.shape[0], 1, sequence_output.shape[2])
         sequence_output = torch.cat((sequence_output, padding_zeros.to(sequence_output.device)), dim=1)
-        print(sequence_output.shape)
         logits = self.qa_outputs(sequence_output)
-        print(logits.shape)
         start_logits, end_logits = logits.split(1, dim=-1)
         start_logits = start_logits.squeeze(-1)
         end_logits = end_logits.squeeze(-1)
+        print(start_logits)
+        print(end_logits)
+        start_logits = self.softmax_layer(start_logits)
+        end_logits = self.softmax_layer(end_logits)
+        print(start_logits)
+        print(end_logits)
 
         outputs = (start_logits, end_logits,) + outputs[2:]
         if start_positions is not None and end_positions is not None:
